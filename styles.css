@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Pragmatic Extended";
-    src: url(https://github.com/loqa-s/dwglib/static/media/PragmaticaExtended-Book.woff2) format("woff2");
+    src: url("../static/media/PragmaticaExtended-Book.woff2") format("woff2");
 }
 
 html { 
