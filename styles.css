@@ -1,0 +1,146 @@
+@font-face {
+    font-family: "Pragmatic Extended";
+    src: url("/fonts/PragmaticaExtended-Book.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap
+}
+
+html { 
+    font-size: 14px; 
+    font-family: "Pragmatic Extended"; 
+}
+
+body { 
+    padding: 0px; 
+    margin: 0px;
+}
+
+header {
+    margin-bottom: 10px;
+    padding: 10px;
+    /* background-color: rgb(225, 175, 209); */
+    text-align: center;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.carcas {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 100px 500px;
+    gap: 1rem;
+    width: fit-content;
+  }
+
+.upper-menu {
+    margin: 0px;
+    border-radius: 10px;
+    background-color: rgb(81, 130, 155);
+}
+
+.side-menu {
+    display: grid;
+    align-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: inherit;
+    margin: inherit;
+    text-align: center;
+}
+
+li {
+    list-style-type:  none;
+}
+
+.li-menu {
+    width: 100%;
+    height: 50px;
+}
+
+.button-menu {
+    font-size: 20px;
+    background-color: rgb(246, 153, 92);
+    border-color: transparent;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 50px;
+    height: 40px;
+    width: 70%;
+}
+
+.button-menu:hover {
+    scale: 1.1;
+    background-color: rgb(246, 153, 92);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.wrapper {
+    background-color: rgb(81, 130, 155);
+    border-radius: 10px;
+    height: 500px;
+}
+
+.content {
+    max-height: 100%;
+    overflow: auto;
+}
+
+.content-header {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 40px;
+    color: rgb(246, 153, 92);
+}
+
+.content-list {
+    display: grid;
+    align-items: center;
+    grid-template-columns:repeat(3, 1fr);
+    /* background-color: aqua; */
+    grid-gap: 20px;
+    padding: 20px;
+    padding-top: 0px;
+    margin: 20px;
+}
+
+.content-card {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(246, 153, 92);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    text-decoration: none;
+}
+
+.content-card:hover {
+    scale: 1.1;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.content-paragraph {
+    text-align: center;
+    font-size: 30px;
+    color: rgb(246, 153, 92);;
+    padding: 30px;
+}
+
+img {
+    max-width: 100%;
+}
+
+h2 {
+    margin-top: 7px;
+    font-size: 15px;
+    color: black;
+}
+
+footer {
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
