@@ -1,11 +1,11 @@
-@font-face {
-    font-family: "Pragmatic Extended";
-    src: url("../static/media/PragmaticaExtended-Book.woff2") format("woff2");
-}
-
 html { 
     font-size: 14px; 
-    font-family: "Pragmatic Extended", sans-serif; 
+    font-family: "Noto Sans Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
 }
 
 body { 
