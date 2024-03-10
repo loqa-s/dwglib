@@ -143,7 +143,7 @@ infoButton.addEventListener(`click`, function () {
 
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".content-card")) {
-    closestContentCardId = e.target.closest(".content-card").id;
+    const closestContentCardId = e.target.closest(".content-card").id;
     buildDetailedInfoFromInputId(closestContentCardId);
   }
 });
