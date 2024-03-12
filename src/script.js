@@ -34,7 +34,7 @@ const returnArrayOf = (fileType) => {
     outerScopeLIElements.forEach((key) => ulElement.appendChild(key));
     sectionElement.appendChild(ulElement);
   } else {
-    textInSectionElement(nothingFoundString);
+    showTextInSectionElement(nothingFoundString);
   }
 };
 
@@ -43,7 +43,9 @@ const buildDetailedInfoFromInputId = (inputId) => {
   for (const key in dataJSON) {
     if (dataJSON[key].id === inputId) {
       const previousSectionWrapperElement = document.querySelector(".detailed");
-      if (previousSectionWrapperElement) {removeHtmlElement(previousSectionWrapperElement)};
+      if (previousSectionWrapperElement) {
+        removeHtmlElement(previousSectionWrapperElement);
+      }
 
       const sectionCarcasElement = document.querySelector(".carcas");
       const sectionWrapperElement = document.createElement("section");
@@ -101,7 +103,27 @@ const buildDetailedInfoFromInputId = (inputId) => {
   }
 };
 
-const removeHtmlElement = (element) => {element.remove()};
+const removeHtmlElement = (element) => {
+  element.remove();
+};
+
+const hasSearchParams = () => {
+  return window.location.search;
+};
+
+const renderBlockFromSearchParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const foundedParam = searchParams.get("id");
+  buildDetailedInfoFromInputId(foundedParam);
+};
+
+const generateSearchParamsOnClick = (id) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.set("id", id);
+  const newRelativePathQuery =
+    window.location.pathname + "?" + searchParams.toString();
+  history.pushState(null, "", newRelativePathQuery);
+};
 
 const addContentHeader = (str) => {
   const contentHeaderElement = document.createElement("h3");
@@ -110,7 +132,7 @@ const addContentHeader = (str) => {
   sectionElement.appendChild(contentHeaderElement);
 };
 
-const textInSectionElement = (str) => {
+const showTextInSectionElement = (str) => {
   const pElement = document.createElement("p");
   pElement.textContent = str;
   pElement.className = "content-paragraph";
@@ -138,20 +160,37 @@ cadButton.addEventListener(`click`, function () {
 infoButton.addEventListener(`click`, function () {
   const removeLiInSectionElement = (sectionElement.textContent = "");
   const changeContentHeader = addContentHeader("INFO");
-  const infoScreenOutput = textInSectionElement(infoString);
+  const infoScreenOutput = showTextInSectionElement(infoString);
 });
 
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".content-card")) {
     const closestContentCardId = e.target.closest(".content-card").id;
+    generateSearchParamsOnClick(closestContentCardId);
     buildDetailedInfoFromInputId(closestContentCardId);
   }
 });
 
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".back-button")) {
-    const removeDetailedHtmlElement = removeHtmlElement(document.querySelector(".detailed"));
+    const deletedGeneratedSearchParameters = window.history.pushState(
+      null,
+      "",
+      window.location.pathname
+    );
+    const removeDetailedHtmlElement = removeHtmlElement(
+      document.querySelector(".detailed")
+    );
   }
 });
 
-window.onload = textInSectionElement(infoString);
+window.addEventListener("popstate", () => {
+  renderBlockFromSearchParams();
+});
+
+window.onload = () => {
+  if (hasSearchParams()) {
+    renderBlockFromSearchParams();
+  }
+  showTextInSectionElement(infoString);
+};
