@@ -1,10 +1,6 @@
 import data from "./testData.json" assert { type: "json" };
 
 const sectionElement = document.querySelector(".content");
-const svgButton = document.querySelector(".button-svg");
-const dwgButton = document.querySelector(".button-dwg");
-const cadButton = document.querySelector(".button-cad");
-const infoButton = document.querySelector(".button-info");
 const nothingFoundString = "Пока тут ничего нет, но скоро появится!";
 const infoString =
   "Привет, на связи DWGLIB! Скоро здесь будет подробная инструкция, как мной пользоваться, но сейчас я просто транслирую тестовые данные..";
@@ -19,7 +15,7 @@ const returnArrayOf = (fileType) => {
       const aElement = document.createElement("a");
       const imgElement = document.createElement("img");
       const h2Element = document.createElement("h2");
-      aElement.className = "content-card";
+      aElement.classList.add("content-card", fileType);
       aElement.id = dataJSON[key].id;
       imgElement.src = dataJSON[key].title_img;
       h2Element.textContent = dataJSON[key].title;
@@ -107,22 +103,60 @@ const removeHtmlElement = (element) => {
   element.remove();
 };
 
-const hasSearchParams = () => {
+const removeSearchParam = (param) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const removeId = searchParams.delete(param);
+  const newRelativePathQuery =
+    window.location.pathname + "?" + searchParams.toString();
+  history.pushState(null, "", newRelativePathQuery);
+};
+
+const hasAnySearchParams = () => {
   return window.location.search;
+};
+
+const hasSearchParam = (str) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const foundedParam = searchParams.get(str);
+  return foundedParam;
+};
+
+const renderContentFromSearchParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const foundedParamType = searchParams.get("type");
+  renderContent(foundedParamType);
 };
 
 const renderBlockFromSearchParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
-  const foundedParam = searchParams.get("id");
-  buildDetailedInfoFromInputId(foundedParam);
+  const foundedParamId = searchParams.get("id");
+  buildDetailedInfoFromInputId(foundedParamId);
 };
 
-const generateSearchParamsOnClick = (id) => {
+const generateSearchParamsOnClick = (type, id) => {
   const searchParams = new URLSearchParams(window.location.search);
-  searchParams.set("id", id);
+  searchParams.set("type", type);
+  if (id) {
+    searchParams.set("id", id);
+  }
   const newRelativePathQuery =
     window.location.pathname + "?" + searchParams.toString();
   history.pushState(null, "", newRelativePathQuery);
+};
+
+const renderSearchParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.get("type")) {
+    renderContentFromSearchParams();
+    if (document.querySelector(".detailed")) {
+      const removeDetailedHtmlElement = removeHtmlElement(
+        document.querySelector(".detailed")
+      );
+    }
+  }
+  if (searchParams.get("id")) {
+    renderBlockFromSearchParams();
+  }
 };
 
 const addContentHeader = (str) => {
@@ -134,50 +168,45 @@ const addContentHeader = (str) => {
 
 const showTextInSectionElement = (str) => {
   const pElement = document.createElement("p");
-  pElement.textContent = str;
   pElement.className = "content-paragraph";
+  pElement.textContent = str;
   sectionElement.appendChild(pElement);
 };
 
-svgButton.addEventListener(`click`, function () {
+const renderContent = (fileTypeString) => {
   const removeLiInSectionElement = (sectionElement.textContent = "");
-  const changeContentHeader = addContentHeader("SVG");
-  const svgScreenOutput = returnArrayOf("svg");
-});
-
-dwgButton.addEventListener(`click`, function () {
-  const removeLiInSectionElement = (sectionElement.textContent = "");
-  const changeContentHeader = addContentHeader("DWG");
-  const dwgScreenOutput = returnArrayOf("dwg");
-});
-
-cadButton.addEventListener(`click`, function () {
-  const removeLiInSectionElement = (sectionElement.textContent = "");
-  const changeContentHeader = addContentHeader("CAD");
-  const cadScreenOutput = returnArrayOf("cad");
-});
-
-infoButton.addEventListener(`click`, function () {
-  const removeLiInSectionElement = (sectionElement.textContent = "");
-  const changeContentHeader = addContentHeader("INFO");
-  const infoScreenOutput = showTextInSectionElement(infoString);
-});
+  const changeContentHeader = addContentHeader(fileTypeString.toUpperCase());
+  const screenOutput =
+    fileTypeString === "info"
+      ? showTextInSectionElement(infoString)
+      : returnArrayOf(fileTypeString);
+};
 
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".content-card")) {
-    const closestContentCardId = e.target.closest(".content-card").id;
-    generateSearchParamsOnClick(closestContentCardId);
-    buildDetailedInfoFromInputId(closestContentCardId);
+    const closestContentCard = e.target.closest(".content-card");
+    generateSearchParamsOnClick(
+      closestContentCard.classList[1],
+      closestContentCard.id
+    );
+    buildDetailedInfoFromInputId(closestContentCard.id);
+  }
+});
+
+document.addEventListener(`click`, function (e) {
+  if (e.target.closest(".button-menu")) {
+    const buttonTextContent = e.target.closest(".button-menu").textContent;
+    if (!hasSearchParam("id")) {
+      generateSearchParamsOnClick(buttonTextContent, null);
+    }
+    renderContent(buttonTextContent);
   }
 });
 
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".back-button")) {
-    const deletedGeneratedSearchParameters = window.history.pushState(
-      null,
-      "",
-      window.location.pathname
-    );
+    removeSearchParam("id");
+    renderContentFromSearchParams();
     const removeDetailedHtmlElement = removeHtmlElement(
       document.querySelector(".detailed")
     );
@@ -185,12 +214,14 @@ document.addEventListener(`click`, function (e) {
 });
 
 window.addEventListener("popstate", () => {
-  renderBlockFromSearchParams();
+  if (hasAnySearchParams()) {
+    renderSearchParams();
+  }
 });
 
 window.onload = () => {
-  if (hasSearchParams()) {
-    renderBlockFromSearchParams();
+  renderContent("info");
+  if (hasAnySearchParams()) {
+    renderSearchParams();
   }
-  showTextInSectionElement(infoString);
 };
