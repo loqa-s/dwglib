@@ -182,6 +182,18 @@ const renderContent = (fileTypeString) => {
       : returnArrayOf(fileTypeString);
 };
 
+const renderOnLoad = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const testSearchParams = searchParams.get("type");
+  if (testSearchParams === "info" || testSearchParams === null) {
+    generateSearchParamsOnClick("info", null);
+    renderContent("info");
+    console.log("pip");
+  } else {
+    renderSearchParams();
+  }
+};
+
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".content-card")) {
     const closestContentCard = e.target.closest(".content-card");
@@ -220,8 +232,5 @@ window.addEventListener("popstate", () => {
 });
 
 window.onload = () => {
-  renderContent("info");
-  if (hasAnySearchParams()) {
-    renderSearchParams();
-  }
+  renderOnLoad();
 };
