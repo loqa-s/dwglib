@@ -48,7 +48,7 @@ const buildDetailedInfoFromInputId = (inputId) => {
       const sectionInsideWrapperElement = document.createElement("section");
       const h3Element = document.createElement("h3");
       const ulElement = document.createElement("ul");
-      const horizontalImagesLiElement = document.createElement("li");
+      const detailedImageGridLiElement = document.createElement("li");
       const liElement = document.createElement("li");
       const articleElement = document.createElement("article");
       const typePElement = document.createElement("p");
@@ -61,7 +61,7 @@ const buildDetailedInfoFromInputId = (inputId) => {
       sectionInsideWrapperElement.className = "content";
       h3Element.className = "content-header";
       ulElement.className = "detailed-list";
-      horizontalImagesLiElement.className = "horizontal-images";
+      detailedImageGridLiElement.className = "detailed-image-grid";
       typePElement.className = "stringWithType";
       descriptionPElement.className = "stringWithDescription";
       footerLiElement.className = "content-footer";
@@ -83,12 +83,11 @@ const buildDetailedInfoFromInputId = (inputId) => {
       for (const url in dataJSON[key].preview_imgs) {
         const imgElement = document.createElement("img");
         imgElement.src = dataJSON[key].preview_imgs[url];
-        horizontalImagesLiElement.appendChild(imgElement);
+        detailedImageGridLiElement.appendChild(imgElement);
       }
-
-      ulElement.appendChild(horizontalImagesLiElement);
-      ulElement.appendChild(liElement);
       ulElement.appendChild(footerLiElement);
+      ulElement.appendChild(liElement);
+      ulElement.appendChild(detailedImageGridLiElement);
 
       sectionInsideWrapperElement.appendChild(h3Element);
       sectionInsideWrapperElement.appendChild(ulElement);
@@ -115,7 +114,7 @@ const hasAnySearchParams = () => {
   return window.location.search;
 };
 
-const hasSearchParam = (str) => {
+const hasSpecificSearchParam = (str) => {
   const searchParams = new URLSearchParams(window.location.search);
   const foundedParam = searchParams.get(str);
   return foundedParam;
@@ -208,7 +207,7 @@ document.addEventListener(`click`, function (e) {
 document.addEventListener(`click`, function (e) {
   if (e.target.closest(".button-menu")) {
     const buttonTextContent = e.target.closest(".button-menu").textContent;
-    if (!hasSearchParam("id")) {
+    if (!hasSpecificSearchParam("id")) {
       generateSearchParamsOnClick(buttonTextContent, null);
     }
     renderContent(buttonTextContent);
